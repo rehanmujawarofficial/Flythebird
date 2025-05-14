@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Floppy Bird</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <!-- Ask for Name -->
+  <div id="namePrompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <h2>Enter your name to start:</h2>
+    <input type="text" id="playerName" placeholder="Your name" />
+    <button onclick="submitName()">Start Game</button>
+  </div>
+
+  <div id="game">
+    <div id="bird">
+      <div class="eye"></div>
+      <div class="beak"></div>
+      <div class="wing"></div>
+    </div>
+
+    <!-- Score -->
+    <div id="scoreboard">
+      <div id="score">Score: 0</div>
+      <div id="highScore">High Score: 0</div>
+    </div>
+
+    <!-- Countdown -->
+    <div id="countdownScreen">
+      <div id="countdown">3</div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen">
+      <h1>Game Over</h1>
+      <p id="finalScore">Your Score: 0</p>
+          <button onclick="changeName()">Change Name</button>
+
+      <!-- ✅ Only One Leaderboard Here -->
+      <div id="leaderboard" style="margin-top: 20px;">
+        <h3>🏆 Top 5 Players</h3>
+        <ul id="topPlayersList" style="list-style: none; padding: 0;"></ul>
+      </div>
+
+      <button onclick="restartGame()">Restart</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

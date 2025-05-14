@@ -1,0 +1,195 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(#70c5ce, #ffffff);
+  font-family: Arial, sans-serif;
+}
+#scoreboard {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 20px;
+  z-index: 5;
+}
+
+#score {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+#gameOverScreen {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 22px;
+  z-index: 9999; /* 👈 ADD THIS LINE if not present */
+}
+
+
+#gameOverScreen button {
+  padding: 10px 20px;
+  font-size: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #ffcc00;
+  border-radius: 8px;
+}
+
+#game {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: #add8e6;
+}
+
+#countdownScreen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: rgb(0, 0, 0);
+  font-size: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+#countdown {
+  animation: scaleUp 1s ease-in-out;
+}
+
+@keyframes scaleUp {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
+#bird {
+  width: 60px;
+  height: 40px;
+  background-color: yellow;
+  border-radius: 50% 50% 40% 40%;
+  position: absolute;
+  top: 200px;
+  left: 50px;
+  box-shadow: 0 0 10px #000;
+  position: relative;
+}
+
+/* Eye - thodi aage (right) */
+.eye {
+  width: 6px;
+  height: 6px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  left: 38px; /* was 30px, increased to move forward */
+}
+
+/* Beak - aur aage */
+.beak {
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid orange;
+  position: absolute;
+  top: 16px;
+  left: 60px; /* was 50px, increased to move more forward */
+}
+
+/* Wing */
+.wing {
+  width: 20px;
+  height: 20px;
+  background-color: orange;
+  border-radius: 30% 50%;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  transform: rotate(-20deg);
+  opacity: 0.8;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+
+
+.pipe {
+  width: 60px;
+  background: linear-gradient(to bottom, #228B22, #006400);
+  border: 2px solid #004d00;
+  border-radius: 6px;
+  position: absolute;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  transition: transform 0.2s ease-out;
+}
+
+#namePrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#namePrompt h2 {
+  color: #fff;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#namePrompt input[type="text"] {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 250px;
+  margin-bottom: 15px;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#namePrompt input[type="text"]:focus {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+#namePrompt button {
+  padding: 12px 24px;
+  background-color: #4e54c8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#namePrompt button:hover {
+  background-color: #565bda;
+  transform: translateY(-2px);
+}
