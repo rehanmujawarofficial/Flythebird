@@ -30,7 +30,7 @@ const firebaseConfig = {
   projectId: "flythebird-788d3",
   storageBucket: "flythebird-788d3.firebasestorage.app",
   messagingSenderId: "143389158685",
-  appId: "1:143389158685:web:2ed0bad2dec0aa980e45f4"
+  appId: "1:143389158685:web:2ed0bad2dec0aa980e45f4",
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -58,13 +58,14 @@ function setupLiveLeaderboard() {
   console.log("📡 setupLiveLeaderboard() called");
   const list = document.getElementById("topPlayersList");
 
-  database.ref("scores")
+  database
+    .ref("scores")
     .orderByChild("score")
     .limitToLast(5)
     .on("value", (snapshot) => {
       console.log("📥 Firebase snapshot received for leaderboard");
       const data = [];
-      snapshot.forEach(child => {
+      snapshot.forEach((child) => {
         data.push(child.val());
       });
 
@@ -115,8 +116,8 @@ function startCountdown() {
   }, 1000);
 }
 
-// ⬇️ Gravity Effect on Bird (slowed down)
-let gravity = 1;
+// ⬇️ Gravity Effect on Bird
+gravity = 1; // Adjusted for slower fall speed
 
 function applyGravity() {
   velocity += gravity;
@@ -130,9 +131,9 @@ function applyGravity() {
   bird.style.top = birdTop + "px";
 }
 
-// ⬆️ Jump Mechanism (gentler jump)
+// ⬆️ Jump Mechanism
 function jump() {
-  if (gameRunning) velocity = -6;
+  if (gameRunning) velocity = -7;
 }
 
 document.addEventListener("keydown", jump);
@@ -166,10 +167,13 @@ function endGame() {
         userRef.set({
           name: playerName,
           score: score,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
         });
       } else {
-        console.log("⚠️ Not saving. Existing score is higher:", existingData.score);
+        console.log(
+          "⚠️ Not saving. Existing score is higher:",
+          existingData.score
+        );
       }
     });
   } else {
@@ -235,7 +239,6 @@ function createPipe() {
 
       // Speed up every 5 points
       if (score % 5 === 0) pipeSpeed += 0.5;
-
     } else {
       topPipe.style.left = left - pipeSpeed + "px";
       bottomPipe.style.left = left - pipeSpeed + "px";
@@ -246,7 +249,8 @@ function createPipe() {
       let bottomHeight = parseInt(bottomPipe.style.height);
 
       if (
-        left < 80 && left > 20 &&
+        left < 80 &&
+        left > 20 &&
         (birdTop < topHeight || birdBottom > game.offsetHeight - bottomHeight)
       ) {
         clearInterval(move);
