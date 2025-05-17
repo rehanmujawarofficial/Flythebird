@@ -115,7 +115,9 @@ function startCountdown() {
   }, 1000);
 }
 
-// ⬇️ Gravity Effect on Bird
+// ⬇️ Gravity Effect on Bird (slowed down)
+let gravity = 1;
+
 function applyGravity() {
   velocity += gravity;
   birdTop += velocity;
@@ -128,9 +130,9 @@ function applyGravity() {
   bird.style.top = birdTop + "px";
 }
 
-// ⬆️ Jump Mechanism
+// ⬆️ Jump Mechanism (gentler jump)
 function jump() {
-  if (gameRunning) velocity = -10;
+  if (gameRunning) velocity = -6;
 }
 
 document.addEventListener("keydown", jump);
