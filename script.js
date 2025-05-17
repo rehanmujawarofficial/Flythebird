@@ -1,3 +1,4 @@
+// 🎮 DOM Elements
 const bird = document.getElementById("bird");
 const game = document.getElementById("game");
 const scoreDisplay = document.getElementById("score");
@@ -7,6 +8,7 @@ const highScoreDisplay = document.getElementById("highScore");
 const countdownScreen = document.getElementById("countdownScreen");
 const countdownText = document.getElementById("countdown");
 
+// 📊 Game State Variables
 let birdTop = 200;
 let gravity = 2;
 let velocity = 0;
@@ -16,11 +18,11 @@ let gameRunning = false;
 let playerName = "";
 let gameEnded = false;
 
-// Load local high score
+// 💾 Load local high score
 let highScore = localStorage.getItem("floppyHighScore") || 0;
 highScoreDisplay.innerText = "High Score: " + highScore;
 
-// Firebase config
+// 🔐 Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCcuxX5haVwQErnv3s9nlzLqiyqIIGMOsY",
   authDomain: "flythebird-788d3.firebaseapp.com",
@@ -34,13 +36,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// 🔁 Reset player name
 function changeName() {
   localStorage.removeItem("floppyPlayerName");
   location.reload();
 }
 
-
-// 🔄 Load player name from localStorage on page load
+// 🧠 Load saved player name and start game
 window.addEventListener("DOMContentLoaded", () => {
   const savedName = localStorage.getItem("floppyPlayerName");
   if (savedName) {
@@ -51,7 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ✅ LIVE LEADERBOARD SETUP
+// 🏆 Live Leaderboard Setup
 function setupLiveLeaderboard() {
   console.log("📡 setupLiveLeaderboard() called");
   const list = document.getElementById("topPlayersList");
@@ -66,6 +68,7 @@ function setupLiveLeaderboard() {
         data.push(child.val());
       });
 
+      // Sort highest to lowest
       data.sort((a, b) => b.score - a.score);
       list.innerHTML = "";
       data.forEach((player, i) => {
@@ -76,19 +79,19 @@ function setupLiveLeaderboard() {
     });
 }
 
+// 📝 Submit Player Name
 function submitName() {
   const nameInput = document.getElementById("playerName").value.trim();
   if (!nameInput) return alert("Please enter your name!");
   playerName = nameInput;
 
-  // ✅ Save to localStorage
   localStorage.setItem("floppyPlayerName", playerName);
-
   console.log("✅ Player name set:", playerName);
   document.getElementById("namePrompt").style.display = "none";
   startCountdown();
 }
 
+// ⏱️ Start Countdown Before Game
 function startCountdown() {
   let count = 3;
   countdownText.textContent = count;
@@ -99,7 +102,7 @@ function startCountdown() {
     if (count > 0) {
       countdownText.textContent = count;
       countdownText.style.animation = "none";
-      countdownText.offsetHeight;
+      countdownText.offsetHeight; // trigger reflow
       countdownText.style.animation = null;
     } else {
       clearInterval(countdownInterval);
@@ -112,6 +115,7 @@ function startCountdown() {
   }, 1000);
 }
 
+// ⬇️ Gravity Effect on Bird
 function applyGravity() {
   velocity += gravity;
   birdTop += velocity;
@@ -124,6 +128,7 @@ function applyGravity() {
   bird.style.top = birdTop + "px";
 }
 
+// ⬆️ Jump Mechanism
 function jump() {
   if (gameRunning) velocity = -10;
 }
@@ -132,12 +137,13 @@ document.addEventListener("keydown", jump);
 document.addEventListener("touchstart", jump);
 document.addEventListener("mousedown", jump);
 
-// ✅ Updated endGame with debug logs
+// ❌ End Game and Save Score
 function endGame() {
   if (gameEnded) return;
   gameEnded = true;
   gameRunning = false;
 
+  // 🏅 Update local high score
   if (score > highScore) {
     highScore = score;
     localStorage.setItem("floppyHighScore", highScore);
@@ -147,13 +153,12 @@ function endGame() {
   finalScoreText.textContent = `Your Score: ${score}\nHigh Score: ${highScore}`;
   gameOverScreen.style.display = "flex";
 
+  // 💾 Save score to Firebase
   if (playerName) {
     const userRef = database.ref("scores/" + playerName);
 
-    // ✅ Check existing score before writing
     userRef.once("value", (snapshot) => {
       const existingData = snapshot.val();
-
       if (!existingData || score > existingData.score) {
         console.log("🔥 Saving NEW high score:", score);
         userRef.set({
@@ -170,24 +175,29 @@ function endGame() {
   }
 }
 
+// 🔁 Restart Game
 function restartGame() {
   location.reload();
 }
 
+// 🧱 Generate Pipes
 function createPipe() {
   if (!gameRunning) return;
 
   const pipe = document.createElement("div");
   pipe.classList.add("pipe");
 
+  // Random pipe heights
   let pipeTopHeight = Math.random() * 200 + 50;
   let pipeBottomHeight = game.offsetHeight - pipeTopHeight - 150;
 
+  // Top Pipe
   const topPipe = pipe.cloneNode();
   topPipe.style.height = pipeTopHeight + "px";
   topPipe.style.top = "0";
   topPipe.style.left = game.offsetWidth + "px";
 
+  // Bottom Pipe
   const bottomPipe = pipe.cloneNode();
   bottomPipe.style.height = pipeBottomHeight + "px";
   bottomPipe.style.bottom = "0";
@@ -197,6 +207,7 @@ function createPipe() {
   game.appendChild(topPipe);
   game.appendChild(bottomPipe);
 
+  // Pipe Movement
   const move = setInterval(() => {
     if (!gameRunning) {
       clearInterval(move);
@@ -204,6 +215,8 @@ function createPipe() {
     }
 
     let left = parseInt(topPipe.style.left);
+
+    // Offscreen → remove and increment score
     if (left < -50) {
       clearInterval(move);
       game.removeChild(topPipe);
@@ -211,17 +224,21 @@ function createPipe() {
       score++;
       scoreDisplay.innerText = "Score: " + score;
 
+      // Update high score
       if (score > highScore) {
         highScore = score;
         localStorage.setItem("floppyHighScore", highScore);
         highScoreDisplay.innerText = "High Score: " + highScore;
       }
 
+      // Speed up every 5 points
       if (score % 5 === 0) pipeSpeed += 0.5;
+
     } else {
       topPipe.style.left = left - pipeSpeed + "px";
       bottomPipe.style.left = left - pipeSpeed + "px";
 
+      // Collision Detection
       let birdBottom = birdTop + 30;
       let topHeight = parseInt(topPipe.style.height);
       let bottomHeight = parseInt(bottomPipe.style.height);
@@ -237,13 +254,15 @@ function createPipe() {
   }, 20);
 }
 
-// Game loop
+// 🔁 Game Loop: Apply Gravity
 setInterval(() => {
   if (gameRunning) applyGravity();
 }, 20);
 
+// 🔁 Pipe Generator Loop
 setInterval(() => {
   if (gameRunning) createPipe();
 }, 2000);
 
+// 🚀 Start Firebase Leaderboard Sync
 setupLiveLeaderboard(); // <-- Yeh fix hai!
